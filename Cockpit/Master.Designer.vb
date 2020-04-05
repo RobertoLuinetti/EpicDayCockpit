@@ -38,14 +38,15 @@ Partial Class Master
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Titolo = New System.Windows.Forms.TextBox()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
-        Me.CheckBox_H = New System.Windows.Forms.CheckBox()
-        Me.CheckBox_V = New System.Windows.Forms.CheckBox()
+        Me.DebugData = New System.Windows.Forms.CheckBox()
         Me.SaveBMP = New System.Windows.Forms.Button()
         Me.TrackBarSogliaMovimento = New System.Windows.Forms.TrackBar()
         Me.SpeedThresholdLBL = New System.Windows.Forms.Label()
         Me.MMLBL = New System.Windows.Forms.Label()
         Me.TrackBarMM = New System.Windows.Forms.TrackBar()
         Me.Label5 = New System.Windows.Forms.Label()
+        Me.RadioButton1 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton2 = New System.Windows.Forms.RadioButton()
         CType(Me.picGraph, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBarSogliaMovimento, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBarMM, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -189,25 +190,15 @@ Partial Class Master
         '
         Me.OpenFileDialog1.FileName = "OpenFileDialog1"
         '
-        'CheckBox_H
+        'DebugData
         '
-        Me.CheckBox_H.AutoSize = True
-        Me.CheckBox_H.Location = New System.Drawing.Point(443, 70)
-        Me.CheckBox_H.Name = "CheckBox_H"
-        Me.CheckBox_H.Size = New System.Drawing.Size(60, 17)
-        Me.CheckBox_H.TabIndex = 22
-        Me.CheckBox_H.Text = "Altezza"
-        Me.CheckBox_H.UseVisualStyleBackColor = True
-        '
-        'CheckBox_V
-        '
-        Me.CheckBox_V.AutoSize = True
-        Me.CheckBox_V.Location = New System.Drawing.Point(443, 48)
-        Me.CheckBox_V.Name = "CheckBox_V"
-        Me.CheckBox_V.Size = New System.Drawing.Size(64, 17)
-        Me.CheckBox_V.TabIndex = 23
-        Me.CheckBox_V.Text = "Velocità"
-        Me.CheckBox_V.UseVisualStyleBackColor = True
+        Me.DebugData.AutoSize = True
+        Me.DebugData.Location = New System.Drawing.Point(12, 73)
+        Me.DebugData.Name = "DebugData"
+        Me.DebugData.Size = New System.Drawing.Size(82, 17)
+        Me.DebugData.TabIndex = 23
+        Me.DebugData.Text = "Debug data"
+        Me.DebugData.UseVisualStyleBackColor = True
         '
         'SaveBMP
         '
@@ -261,19 +252,42 @@ Partial Class Master
         Me.Label5.TabIndex = 29
         Me.Label5.Text = "Media Mobile Altezza"
         '
+        'RadioButton1
+        '
+        Me.RadioButton1.AutoSize = True
+        Me.RadioButton1.Location = New System.Drawing.Point(454, 48)
+        Me.RadioButton1.Name = "RadioButton1"
+        Me.RadioButton1.Size = New System.Drawing.Size(59, 17)
+        Me.RadioButton1.TabIndex = 32
+        Me.RadioButton1.TabStop = True
+        Me.RadioButton1.Text = "Altezza"
+        Me.RadioButton1.UseVisualStyleBackColor = True
+        '
+        'RadioButton2
+        '
+        Me.RadioButton2.AutoSize = True
+        Me.RadioButton2.Location = New System.Drawing.Point(454, 70)
+        Me.RadioButton2.Name = "RadioButton2"
+        Me.RadioButton2.Size = New System.Drawing.Size(66, 17)
+        Me.RadioButton2.TabIndex = 33
+        Me.RadioButton2.TabStop = True
+        Me.RadioButton2.Text = "Distanza"
+        Me.RadioButton2.UseVisualStyleBackColor = True
+        '
         'Master
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(984, 647)
+        Me.Controls.Add(Me.RadioButton2)
+        Me.Controls.Add(Me.RadioButton1)
         Me.Controls.Add(Me.MMLBL)
         Me.Controls.Add(Me.TrackBarMM)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.SpeedThresholdLBL)
         Me.Controls.Add(Me.TrackBarSogliaMovimento)
         Me.Controls.Add(Me.SaveBMP)
-        Me.Controls.Add(Me.CheckBox_V)
-        Me.Controls.Add(Me.CheckBox_H)
+        Me.Controls.Add(Me.DebugData)
         Me.Controls.Add(Me.Titolo)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)
@@ -315,12 +329,13 @@ Partial Class Master
     Friend WithEvents SpeedThr As TextBox
     Friend WithEvents Titolo As TextBox
     Friend WithEvents OpenFileDialog1 As OpenFileDialog
-    Friend WithEvents CheckBox_H As CheckBox
-    Friend WithEvents CheckBox_V As CheckBox
+    Friend WithEvents DebugData As CheckBox
     Friend WithEvents SaveBMP As Button
     Friend WithEvents TrackBarSogliaMovimento As TrackBar
     Friend WithEvents SpeedThresholdLBL As Label
     Friend WithEvents MMLBL As Label
     Friend WithEvents TrackBarMM As TrackBar
     Friend WithEvents Label5 As Label
+    Friend WithEvents RadioButton1 As RadioButton
+    Friend WithEvents RadioButton2 As RadioButton
 End Class

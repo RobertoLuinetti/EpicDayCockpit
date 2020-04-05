@@ -4,6 +4,7 @@
     Dim BMPSave As Boolean = False
     Dim SpeedThreshold As Single
     Dim MM As Single
+    Dim GIS(,) As String
 
     Private Sub RenderGraph(Titolo As String, MINALT As Single, MAXALT As Single, MINUTC As Date, MAXUTC As Date, MeanSpeed As Single, PeakSpeed As Single, DistanceTot As Single, MovingTime As Single, TotalHigh As Single, TotalDesc As Single, ByRef GIS As String(,), InFile As String)
         Me.Cursor = Cursors.WaitCursor
@@ -75,8 +76,10 @@
             Dim MoonAlt As Double
             Dim Counter As Integer
 
-            Dim FILE_NAME As String = "ASTRO.CSV"
-            Dim objWriter As New System.IO.StreamWriter(FILE_NAME)
+            'Dim FILE_NAME As String = "ASTRO.CSV"
+            'Dim objWriter As New System.IO.StreamWriter(FILE_NAME)
+            If DebugData.Checked = True Then Flog("ASTRO.CSV", LogCMD.NewFile)
+
 
             Dim TZ As TimeZone = TimeZone.CurrentTimeZone
             Dim OffsetTS As TimeSpan = TZ.GetUtcOffset(DateTimePicker1.Value)
@@ -117,7 +120,7 @@
             For n = 0 To 24 Step 0.01
                 SunAlt = altaz(j + n / 24, sun(j + n / 24, 2), sun(j + n / 24, 3), CInt(LatG.Text) + CInt(LatP.Text) / 60, CInt(LongG.Text) + CInt(LongP.Text) / 60, 1)
                 Draw(gr, PenYellow, prev_n, prev_y, n, SunAlt)
-                objWriter.WriteLine("SUN" & vbTab & n & vbTab & Convert.ToSingle(SunAlt))
+                If DebugData.Checked = True Then Flog("ASTRO.CSV", LogCMD.Write, "SUN" & vbTab & n & vbTab & Convert.ToSingle(SunAlt))
                 If Convert.ToSingle(SunAlt) > MaxSunAlt Then
                     MaxSunN = n
                     MaxSunAlt = Convert.ToSingle(SunAlt)
@@ -131,7 +134,7 @@
             For n = 0 To 24 Step 0.1
                 SunAlt = altaz(ji + n / 24, sun(ji + n / 24, 2), sun(ji + n / 24, 3), CInt(LatG.Text) + CInt(LatP.Text) / 60, CInt(LongG.Text) + CInt(LongP.Text) / 60, 1)
                 Draw(gr, PenLightGreen, prev_n, prev_y, n, SunAlt)
-                objWriter.WriteLine("SUN LOWPOS" & vbTab & n & vbTab & Convert.ToSingle(SunAlt))
+                If DebugData.Checked = True Then Flog("ASTRO.CSV", LogCMD.Write, "SUN LOWPOS" & vbTab & n & vbTab & Convert.ToSingle(SunAlt))
                 prev_n = n
                 prev_y = Convert.ToSingle(SunAlt)
             Next n
@@ -140,7 +143,7 @@
             For n = 0 To 24 Step 0.1
                 SunAlt = altaz(je + n / 24, sun(je + n / 24, 2), sun(je + n / 24, 3), CInt(LatG.Text) + CInt(LatP.Text) / 60, CInt(LongG.Text) + CInt(LongP.Text) / 60, 1)
                 Draw(gr, PenRed, prev_n, prev_y, n, SunAlt)
-                objWriter.WriteLine("SUN HIPOS" & vbTab & n & vbTab & Convert.ToSingle(SunAlt))
+                If DebugData.Checked = True Then Flog("ASTRO.CSV", LogCMD.Write, "SUN HIPOS" & vbTab & n & vbTab & Convert.ToSingle(SunAlt))
                 prev_n = n
                 prev_y = Convert.ToSingle(SunAlt)
             Next n
@@ -164,7 +167,7 @@
                     MaxMoonN = n
                     MaxMoonAlt = Convert.ToSingle(MoonAlt)
                 End If
-                objWriter.WriteLine("MOON" & vbTab & n & vbTab & Convert.ToSingle(MoonAlt))
+                If DebugData.Checked = True Then Flog("ASTRO.CSV", LogCMD.Write, "MOON" & vbTab & n & vbTab & Convert.ToSingle(MoonAlt))
                 prev_n = n
                 prev_y = Convert.ToSingle(MoonAlt)
             Next n
@@ -200,7 +203,7 @@
                 If n > 1 Then Draw(gr, PenYellow, prev_n, prev_y, ALTTime, ALTY)
                 prev_n = ALTTime
                 prev_y = ALTY
-                objWriter.WriteLine("ALTEZZA" & vbTab & ALTTime & vbTab & ALTY)
+                If DebugData.Checked = True Then Flog("ASTRO.CSV", LogCMD.Write, "ALTEZZA" & vbTab & ALTTime & vbTab & ALTY)
             Next n
 
 
@@ -244,7 +247,8 @@
                 prev_y = SPDY
             Next n
 
-            objWriter.Close()
+            If DebugData.Checked = True Then Flog("ASTRO.CSV", LogCMD.Close)
+
             'Dim LogoFile As String = "C:\Users\Roberto\Documents\YouTubeResource\Logo_BTS_midi.bmp"
             'Dim bm_logo As New Bitmap(LogoFile)
             Dim bm_logo As New Bitmap(myAsm.GetManifestResourceStream(Me.GetType, "Logo_BTS_midi.bmp"))
@@ -299,13 +303,13 @@
 
         If result = Windows.Forms.DialogResult.OK Then
             GPXFileName = openfiledlg.FileName
+            GIS = GPX.ReadGPX(GPXFileName)
             RenderData()
         End If
 
     End Sub
 
     Private Sub RenderData()
-        Dim GIS(,) As String
         Dim MINLAT As Single = 1000000.0
         Dim MAXLAT As Single
         Dim MINLON As Single = 1000000.0
@@ -326,8 +330,6 @@
         Dim MaxSpeed As Double = 0
         Dim PrevInstant As Date
         Dim CurrInstant As Date
-        Dim FILE_NAME As String = "GIS.CSV"
-        Dim objWriter As New System.IO.StreamWriter(FILE_NAME)
         Dim MovingTime As Single
         Dim MovingDistance As Single
         Dim TotalHigh As Single
@@ -335,9 +337,10 @@
         Dim AverageALTP As Single
         Dim AverageALTC As Single
 
-        objWriter.WriteLine("n" & vbTab & "Course" & vbTab & "Distance" & vbTab & "CurrentSpeed" & vbTab & "ALT" & vbTab & "LAT" & vbTab & "LON" & vbTab & "UTC" & vbTab & "LOCALDATE" & vbTab & "LOCALTIME")
+        If DebugData.Checked = True Then Flog("GIS.CSV", LogCMD.NewFile)
+        If DebugData.Checked = True Then Flog("GIS.CSV", LogCMD.Write, "n" & vbTab & "Course" & vbTab & "Distance" & vbTab & "CurrentSpeed" & vbTab & "ALT" & vbTab & "LAT" & vbTab & "LON" & vbTab & "UTC" & vbTab & "LOCALDATE" & vbTab & "LOCALTIME")
 
-        GIS = GPX.ReadGPX(GPXFileName)
+        'GIS = GPX.ReadGPX(GPXFileName)
 
         For n = 1 To GIS.GetUpperBound(1)
             If CType(GIS(LAT, n).Replace(".", ","), Single) > MAXLAT Then MAXLAT = CType(GIS(LAT, n).Replace(".", ","), Single)
@@ -385,11 +388,11 @@
                 End If
                 Source = Destination
             End If
-            objWriter.WriteLine(n & vbTab & Course & vbTab & Distance & vbTab & (CurrentSpeed / 1000 * 3600) & vbTab & CType(GIS(ALT, n).Replace(".", ","), Single) & vbTab & CType(GIS(LAT, n).Replace(".", ","), Single) & vbTab & CType(GIS(LON, n).Replace(".", ","), Single) & vbTab & GIS(UTC, n) & vbTab & Format(CurrInstant, "dd/MM/yyyy") & vbTab & Format(CurrInstant, "HH:mm:ss"))
+            If DebugData.Checked = True Then Flog("GIS.CSV", LogCMD.Write, n & vbTab & Course & vbTab & Distance & vbTab & (CurrentSpeed / 1000 * 3600) & vbTab & CType(GIS(ALT, n).Replace(".", ","), Single) & vbTab & CType(GIS(LAT, n).Replace(".", ","), Single) & vbTab & CType(GIS(LON, n).Replace(".", ","), Single) & vbTab & GIS(UTC, n) & vbTab & Format(CurrInstant, "dd/MM/yyyy") & vbTab & Format(CurrInstant, "HH:mm:ss"))
 
         Next n
 
-        objWriter.Close()
+        If DebugData.Checked = True Then Flog("GIS.CSV", LogCMD.Close)
 
         DateTimePicker1.Value = MINUTC
 
@@ -430,6 +433,8 @@
         TrackBarMM.Value = 10
         MM = 10
         MMLBL.Text = "10 elementi"
+
+        DebugData.Checked = False
     End Sub
 
     Private Sub SaveBMP_Click(sender As Object, e As EventArgs) Handles SaveBMP.Click
@@ -456,4 +461,7 @@
         If GPXFileName <> "" Then RenderData()
     End Sub
 
+    Private Sub DebugData_CheckedChanged(sender As Object, e As EventArgs) Handles DebugData.CheckedChanged
+        If GPXFileName <> "" Then RenderData()
+    End Sub
 End Class
