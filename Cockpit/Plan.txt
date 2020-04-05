@@ -1,0 +1,20 @@
+﻿Dim FILE_NAME As String = "C:\tmp\test.txt"
+Dim objWriter As New System.IO.StreamWriter(FILE_NAME)
+objWriter.WriteLine(prev_n & vbTab & prev_y & vbTab & n & vbTab & Convert.ToSingle(MoonAlt))
+objWriter.Close()
+
+parametrizzare scrittura file (sun moon GIS)
+apertura form in maps  http://maps.google.com?q=56.01717,12.18909
+
+scalata e discesa su media mobile 10 elementi
+
+
+//SCALA ALTEZZA  , cambiare da 90 a quella vera - idem velocità
+//SUB GetPhysicalCoords a aprtire da X,Y Logici con la attuale scala
+//due linee blu che uniscono il box attività con grafici sottostanti
+//Salvataggio bitmap in file ocn stesso nome GPX ma con estensione BMP
+Merge del codice con la libreria
+aumentare risoluzione in OVS
+GoPro come webcam PC
+GitHub Versioning ?
+scrittura nel grafico
