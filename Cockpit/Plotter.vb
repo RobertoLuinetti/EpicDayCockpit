@@ -21,6 +21,7 @@
     Public PenDarkBlue As New Pen(Color.DarkBlue, 0)
     Public PenLightGreen As New Pen(Color.LightGreen, 0)
     Public PenLightWhite As New Pen(Color.WhiteSmoke, 0)
+    Public PenCyan As New Pen(Color.Cyan, 0)
 
     Public Sub SetDisplayPhysicalArea(VpicGraph As PictureBox, XWAreaPix As Single, YHAreaPix As Single, X0pix As Single, Y0pix As Single, XWDisplayPix As Single, YHDisplayPix As Single)
         VpicGraph.Width = XWAreaPix

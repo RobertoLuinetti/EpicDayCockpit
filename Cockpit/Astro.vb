@@ -224,7 +224,7 @@
     ' J2000.0 From Practial Astronomy with your calculator, 2nd edition eq 25, Peter Duffett-Smith
 
     Function altaz(d As Double, DEC As Double, RA As Double, GLat As Double, GLong As Double, Index As Integer) As Double
-        Dim h As Double, lst As Double, a As Double, z As Double, sa As Double, cz As Double
+        Dim h As Double, a As Double, sa As Double, cz As Double
         h = gst(d) + GLong - RA
         sa = DegSin(DEC) * DegSin(GLat)
         sa = sa + DegCos(DEC) * DegCos(GLat) * DegCos(h)

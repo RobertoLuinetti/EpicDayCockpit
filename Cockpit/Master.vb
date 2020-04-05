@@ -1,6 +1,9 @@
 ﻿Public Class Master
 
     Dim GPXFileName As String
+    Dim BMPSave As Boolean = False
+    Dim SpeedThreshold As Single
+    Dim MM As Single
 
     Private Sub RenderGraph(Titolo As String, MINALT As Single, MAXALT As Single, MINUTC As Date, MAXUTC As Date, MeanSpeed As Single, PeakSpeed As Single, DistanceTot As Single, MovingTime As Single, TotalHigh As Single, TotalDesc As Single, ByRef GIS As String(,), InFile As String)
         Me.Cursor = Cursors.WaitCursor
@@ -70,7 +73,6 @@
             Dim je As Double = Days2000(y, 6, 21, 0, 0, 0, 1)
             Dim SunAlt As Double
             Dim MoonAlt As Double
-            Dim Found As Single
             Dim Counter As Integer
 
             Dim FILE_NAME As String = "ASTRO.CSV"
@@ -104,23 +106,26 @@
             Label(gr, "Solstizio d'inverno", "Verdana", 7, Color.LightGreen, 0.5, 60)
             Label(gr, "Altezza luna giorno attività", "Verdana", 7, Color.WhiteSmoke, 0.5, 40)
 
-            Dim SunFile As String = "C:\Users\Roberto\Documents\YouTubeResource\Sun_ico.bmp"
-            Dim bm_sun As New Bitmap(SunFile)
+            'Dim SunFile As String = "C:\Users\Roberto\Documents\YouTubeResource\Sun_ico.bmp"
+            'Dim bm_sun As New Bitmap(SunFile)
+            Dim myAsm As System.Reflection.Assembly = System.Reflection.Assembly.GetExecutingAssembly()
+            Dim bm_sun As New Bitmap(myAsm.GetManifestResourceStream(Me.GetType, "Sun_ico.bmp")) 'set azione di compilazione dell'immagine = risorsa incorporata
             bm_sun.MakeTransparent(Color.Black)
 
             'sole
+            Dim MaxSunN, MaxSunAlt As Single
             For n = 0 To 24 Step 0.01
                 SunAlt = altaz(j + n / 24, sun(j + n / 24, 2), sun(j + n / 24, 3), CInt(LatG.Text) + CInt(LatP.Text) / 60, CInt(LongG.Text) + CInt(LongP.Text) / 60, 1)
                 Draw(gr, PenYellow, prev_n, prev_y, n, SunAlt)
                 objWriter.WriteLine("SUN" & vbTab & n & vbTab & Convert.ToSingle(SunAlt))
-                If Convert.ToSingle(SunAlt) > 0 And Convert.ToSingle(SunAlt) < prev_y And Found = 0 Then
-                    DrawLogicPicture(gr, bm_sun, n, Convert.ToSingle(SunAlt))
-                    'gr.DrawEllipse(plot_pen, n + Offset - Xmin - (4.0F / (Ratio * 16 / 9)) / 1.2F, Convert.ToSingle(SunAlt) - 4.0F / 2, 4.0F / (Ratio * 16 / 9), 4.0F)
-                    Found = 1
+                If Convert.ToSingle(SunAlt) > MaxSunAlt Then
+                    MaxSunN = n
+                    MaxSunAlt = Convert.ToSingle(SunAlt)
                 End If
                 prev_n = n
                 prev_y = Convert.ToSingle(SunAlt)
             Next n
+            DrawLogicPicture(gr, bm_sun, MaxSunN, MaxSunAlt)
 
             'inverno
             For n = 0 To 24 Step 0.1
@@ -146,24 +151,24 @@
             LongDG = DegDecimal(CInt(LongG.Text), CInt(LongP.Text), CDbl(LongS.Text))
 
             'LUNA
-            Dim MoonFile As String = "C:\Users\Roberto\Documents\YouTubeResource\Moon_ico.bmp"
-            Dim bm_moon As New Bitmap(MoonFile)
+            'Dim MoonFile As String = "C:\Users\Roberto\Documents\YouTubeResource\Moon_ico.bmp"
+            'Dim bm_moon As New Bitmap(MoonFile)
+            Dim bm_moon As New Bitmap(myAsm.GetManifestResourceStream(Me.GetType, "Moon_ico.bmp")) 'set azione di compilazione dell'immagine = risorsa incorporata
+            Dim MaxMoonN, MaxMoonAlt As Single
             bm_moon.MakeTransparent(Color.FromArgb(255, 2, 2, 2))
-            Found = 0
             For n = 0 To 24 Step 0.1
                 Counter = Counter + 1
-                'SunAlt = altaz(j + n / 24, sun(j + n / 24, 2), sun(j + n / 24, 3), CInt(LatG.Text) + CInt(LatP.Text) / 60, CInt(LongG.Text) + CInt(LongP.Text) / 60, 1)
                 MoonAlt = altaz(j + n / 24, tmoon(j + n / 24, LatDG, LongDG, 2), tmoon(j + n / 24, LatDG, LongDG, 3), CInt(LatG.Text) + CInt(LatP.Text) / 60, CInt(LongG.Text) + CInt(LongP.Text) / 60, 1)
                 If Counter > 1 Then Draw(gr, PenLightWhite, prev_n, prev_y, n, Convert.ToSingle(MoonAlt))
-                If Convert.ToSingle(MoonAlt) > 0 And Convert.ToSingle(MoonAlt) < prev_y And Found = 0 Then
-                    DrawLogicPicture(gr, bm_moon, n, Convert.ToSingle(MoonAlt))
-                    'gr.DrawEllipse(plot_pen, n + Offset - Xmin - (4.0F / (Ratio * 16 / 9)) / 1.2F, Convert.ToSingle(SunAlt) - 4.0F / 2, 4.0F / (Ratio * 16 / 9), 4.0F)
-                    Found = 1
+                If Convert.ToSingle(MoonAlt) > MaxMoonAlt Then
+                    MaxMoonN = n
+                    MaxMoonAlt = Convert.ToSingle(MoonAlt)
                 End If
                 objWriter.WriteLine("MOON" & vbTab & n & vbTab & Convert.ToSingle(MoonAlt))
                 prev_n = n
                 prev_y = Convert.ToSingle(MoonAlt)
             Next n
+            DrawLogicPicture(gr, bm_moon, MaxMoonN, MaxMoonAlt)
 
 
             'ALTEZZA =====================================================================================
@@ -183,8 +188,8 @@
             YTickLabel(gr, 0, 50, "Verdana", 7)
             GetPhysicalCoords(NumtimeStart, Ytop, LBX, LBY)
             GetPhysicalCoords(NumtimeStop, Ytop, RBX, RBY)
-            gr.DrawLine(PenBlue, LTX, LTY, LBX, LBY)
-            gr.DrawLine(PenBlue, RTX, RTY, RBX, RBY)
+            gr.DrawLine(PenCyan, LTX, LTY, LBX, LBY)
+            gr.DrawLine(PenCyan, RTX, RTY, RBX, RBY)
             Dim ALTTime As Single
             Dim ALTY As Single
 
@@ -240,8 +245,9 @@
             Next n
 
             objWriter.Close()
-            Dim LogoFile As String = "C:\Users\Roberto\Documents\YouTubeResource\Logo_BTS_midi.bmp"
-            Dim bm_logo As New Bitmap(LogoFile)
+            'Dim LogoFile As String = "C:\Users\Roberto\Documents\YouTubeResource\Logo_BTS_midi.bmp"
+            'Dim bm_logo As New Bitmap(LogoFile)
+            Dim bm_logo As New Bitmap(myAsm.GetManifestResourceStream(Me.GetType, "Logo_BTS_midi.bmp"))
             bm_logo.MakeTransparent(Color.Black)
             gr.DrawImage(bm_logo, (bm_logo.Width - bm_logo.Width) \ 2 + 75, bm_logo.Height - bm_logo.Height + 350)
 
@@ -251,10 +257,12 @@
 
         Me.Cursor = Cursors.Default
 
-        Clipboard.SetDataObject(DirectCast(picGraph.Image.Clone, Bitmap), True)
-        InFile = Replace(InFile, ".gpx", ".bmp")
-        bm.Save(InFile, System.Drawing.Imaging.ImageFormat.Bmp)
-
+        If BMPSave = True Then
+            Clipboard.SetDataObject(DirectCast(picGraph.Image.Clone, Bitmap), True)
+            InFile = Replace(InFile, ".gpx", ".bmp")
+            bm.Save(InFile, System.Drawing.Imaging.ImageFormat.Bmp)
+            BMPSave = False
+        End If
     End Sub
 
 
@@ -327,8 +335,6 @@
         Dim AverageALTP As Single
         Dim AverageALTC As Single
 
-
-
         objWriter.WriteLine("n" & vbTab & "Course" & vbTab & "Distance" & vbTab & "CurrentSpeed" & vbTab & "ALT" & vbTab & "LAT" & vbTab & "LON" & vbTab & "UTC" & vbTab & "LOCALDATE" & vbTab & "LOCALTIME")
 
         GIS = GPX.ReadGPX(GPXFileName)
@@ -341,115 +347,113 @@
 
             If CType(GIS(LAT, n).Replace(".", ","), Single) < MINLAT Then MINLAT = CType(GIS(LAT, n).Replace(".", ","), Single)
             If CType(GIS(LON, n).Replace(".", ","), Single) < MINLON Then MINLON = CType(GIS(LON, n).Replace(".", ","), Single)
-                If CType(GIS(ALT, n).Replace(".", ","), Single) < MINALT Then MINALT = CType(GIS(ALT, n).Replace(".", ","), Single)
-                If GIS(UTC, n) < MINUTC Then MINUTC = GIS(UTC, n)
+            If CType(GIS(ALT, n).Replace(".", ","), Single) < MINALT Then MINALT = CType(GIS(ALT, n).Replace(".", ","), Single)
+            If GIS(UTC, n) < MINUTC Then MINUTC = GIS(UTC, n)
 
-                If n = 1 Then
-                    Source.lat = CType(GIS(LAT, n).Replace(".", ","), Single)
-                    Source.lon = CType(GIS(LON, n).Replace(".", ","), Single)
-                    Source.ele = CType(GIS(ALT, n).Replace(".", ","), Single)
+            If n = 1 Then
+                Source.lat = CType(GIS(LAT, n).Replace(".", ","), Single)
+                Source.lon = CType(GIS(LON, n).Replace(".", ","), Single)
+                Source.ele = CType(GIS(ALT, n).Replace(".", ","), Single)
+            End If
+
+            Destination.lat = CType(GIS(LAT, n).Replace(".", ","), Single)
+            Destination.lon = CType(GIS(LON, n).Replace(".", ","), Single)
+            Destination.ele = CType(GIS(ALT, n).Replace(".", ","), Single)
+
+            If n > 1 Then
+                GetCourseAndDistance(Source, Destination, Course, Distance)
+                DistanceTot += Distance
+                GIS(DST, n) = DistanceTot
+                PrevInstant = GIS(UTC, n - 1)
+                CurrInstant = GIS(UTC, n)
+                CurrentSpeed = Distance / DateDiff(DateInterval.Second, PrevInstant, CurrInstant)
+                GIS(SPD, n) = CurrentSpeed
+                If CurrentSpeed > MaxSpeed Then MaxSpeed = CurrentSpeed
+                If n > MM + 1 Then
+                    For m = n To (n - MM) Step -1
+                        AverageALTC += CType(GIS(ALT, m).Replace(".", ","), Single)
+                        AverageALTP += CType(GIS(ALT, m - 1).Replace(".", ","), Single)
+                    Next m
+                    AverageALTC = AverageALTC / MM
+                    AverageALTP = AverageALTP / MM
+                    If AverageALTC > AverageALTP Then TotalHigh += AverageALTC - AverageALTP
+                    If AverageALTC < AverageALTP Then TotalDesc += AverageALTP - AverageALTC
                 End If
-
-                Destination.lat = CType(GIS(LAT, n).Replace(".", ","), Single)
-                Destination.lon = CType(GIS(LON, n).Replace(".", ","), Single)
-                Destination.ele = CType(GIS(ALT, n).Replace(".", ","), Single)
-
-                If n > 1 Then
-                    GetCourseAndDistance(Source, Destination, Course, Distance)
-                    DistanceTot += Distance
-                    GIS(DST, n) = DistanceTot
-                    PrevInstant = GIS(UTC, n - 1)
-                    CurrInstant = GIS(UTC, n)
-                    CurrentSpeed = Distance / DateDiff(DateInterval.Second, PrevInstant, CurrInstant)
-                    GIS(SPD, n) = CurrentSpeed
-                    If CurrentSpeed > MaxSpeed Then MaxSpeed = CurrentSpeed
-                    If n > 11 Then
-                        For m = n To (n - 10) Step -1
-                            AverageALTC += CType(GIS(ALT, m).Replace(".", ","), Single)
-                            AverageALTP += CType(GIS(ALT, m - 1).Replace(".", ","), Single)
-                        Next m
-                        AverageALTC = AverageALTC / 10
-                        AverageALTP = AverageALTP / 10
-                        If AverageALTC > AverageALTP Then TotalHigh += AverageALTC - AverageALTP
-                        If AverageALTC < AverageALTP Then TotalDesc += AverageALTP - AverageALTC
-                    End If
-                    If CurrentSpeed > CType(SpeedThr.Text, Single) Then
-                        MovingTime += DateDiff(DateInterval.Second, PrevInstant, CurrInstant)
-                        MovingDistance += Distance
-                    End If
-                    Source = Destination
+                If CurrentSpeed > SpeedThreshold Then
+                    MovingTime += DateDiff(DateInterval.Second, PrevInstant, CurrInstant)
+                    MovingDistance += Distance
                 End If
-                objWriter.WriteLine(n & vbTab & Course & vbTab & Distance & vbTab & (CurrentSpeed / 1000 * 3600) & vbTab & CType(GIS(ALT, n).Replace(".", ","), Single) & vbTab & CType(GIS(LAT, n).Replace(".", ","), Single) & vbTab & CType(GIS(LON, n).Replace(".", ","), Single) & vbTab & GIS(UTC, n) & vbTab & Format(CurrInstant, "dd/MM/yyyy") & vbTab & Format(CurrInstant, "HH:mm:ss"))
+                Source = Destination
+            End If
+            objWriter.WriteLine(n & vbTab & Course & vbTab & Distance & vbTab & (CurrentSpeed / 1000 * 3600) & vbTab & CType(GIS(ALT, n).Replace(".", ","), Single) & vbTab & CType(GIS(LAT, n).Replace(".", ","), Single) & vbTab & CType(GIS(LON, n).Replace(".", ","), Single) & vbTab & GIS(UTC, n) & vbTab & Format(CurrInstant, "dd/MM/yyyy") & vbTab & Format(CurrInstant, "HH:mm:ss"))
 
-            Next n
+        Next n
 
-            objWriter.Close()
+        objWriter.Close()
 
-            DateTimePicker1.Value = MINUTC
+        DateTimePicker1.Value = MINUTC
 
-            Dim Degrees As String
+        Dim Degrees As String
 
-            MEANLAT = (MINLAT + MAXLAT) / 2
-            MEANLON = (MINLON + MAXLON) / 2
+        MEANLAT = (MINLAT + MAXLAT) / 2
+        MEANLON = (MINLON + MAXLON) / 2
 
-            Degrees = DecimalPosToDegrees(MEANLAT, enumLongLat.Latitude, enumReturnformat.WithSigns)
-            'MsgBox(Degrees & vbCrLf & Degrees.ToString.Substring(0, InStr(Degrees, "°") - 1))
-            LatG.Text = Degrees.ToString.Substring(0, InStr(Degrees, "°") - 1)
+        Degrees = DecimalPosToDegrees(MEANLAT, enumLongLat.Latitude, enumReturnformat.WithSigns)
+        LatG.Text = Degrees.ToString.Substring(0, InStr(Degrees, "°") - 1)
+        LatP.Text = Degrees.ToString.Substring(InStr(Degrees, "°"), InStr(Degrees, """") - InStr(Degrees, "°") - 1)
+        LatS.Text = Degrees.ToString.Substring(InStr(Degrees, """"), InStr(Degrees, "'") - InStr(Degrees, """") - 1)
+        LatQ.Text = Degrees.ToString.Substring(Degrees.ToString.Length - 1)
+        Degrees = DecimalPosToDegrees(MEANLON, enumLongLat.Longitude, enumReturnformat.WithSigns)
+        LongG.Text = Degrees.ToString.Substring(0, InStr(Degrees, "°") - 1)
+        LongP.Text = Degrees.ToString.Substring(InStr(Degrees, "°"), InStr(Degrees, """") - InStr(Degrees, "°") - 1)
+        LongS.Text = Degrees.ToString.Substring(InStr(Degrees, """"), InStr(Degrees, "'") - InStr(Degrees, """") - 1)
+        LongQ.Text = Degrees.ToString.Substring(Degrees.ToString.Length - 1)
 
-            'MsgBox(Degrees & vbCrLf & Degrees.ToString.Substring(InStr(Degrees, "°"), InStr(Degrees, """") - InStr(Degrees, "°") - 1))
-            LatP.Text = Degrees.ToString.Substring(InStr(Degrees, "°"), InStr(Degrees, """") - InStr(Degrees, "°") - 1)
 
-            'MsgBox(Degrees & vbCrLf & Degrees.ToString.Substring(InStr(Degrees, """"), InStr(Degrees, "'") - InStr(Degrees, """") - 1))
-            LatS.Text = Degrees.ToString.Substring(InStr(Degrees, """"), InStr(Degrees, "'") - InStr(Degrees, """") - 1)
-
-            LatQ.Text = Degrees.ToString.Substring(Degrees.ToString.Length - 1)
-
-            Degrees = DecimalPosToDegrees(MEANLON, enumLongLat.Longitude, enumReturnformat.WithSigns)
-            'MsgBox(Degrees & vbCrLf & Degrees.ToString.Substring(0, InStr(Degrees, "°") - 1))
-            LongG.Text = Degrees.ToString.Substring(0, InStr(Degrees, "°") - 1)
-
-            'MsgBox(Degrees & vbCrLf & Degrees.ToString.Substring(InStr(Degrees, "°"), InStr(Degrees, """") - InStr(Degrees, "°") - 1))
-            LongP.Text = Degrees.ToString.Substring(InStr(Degrees, "°"), InStr(Degrees, """") - InStr(Degrees, "°") - 1)
-
-            'MsgBox(Degrees & vbCrLf & Degrees.ToString.Substring(InStr(Degrees, """"), InStr(Degrees, "'") - InStr(Degrees, """") - 1))
-            LongS.Text = Degrees.ToString.Substring(InStr(Degrees, """"), InStr(Degrees, "'") - InStr(Degrees, """") - 1)
-
-            LongQ.Text = Degrees.ToString.Substring(Degrees.ToString.Length - 1)
-
-            'MsgBox("MINLAT=" & MINLAT & vbCrLf &
-            '       "MAXLAT=" & MAXLAT & vbCrLf &
-            '       "MINLON=" & MINLON & vbCrLf &
-            '       "MAXLON=" & MAXLON & vbCrLf &
-            '       "MINALT=" & MINALT & vbCrLf &
-            '       "MAXALT=" & MAXALT & vbCrLf &
-            '       "Numero misurazioni=" & n & vbCrLf &
-            '       FormatDateTime(GIS(UTC, 1), DateFormat.ShortDate) & " " & FormatDateTime(GIS(UTC, 1), DateFormat.LongTime) & vbCrLf &
-            '       "Istante iniziale=" & MINUTC & vbCrLf &
-            '       "Istante finale=" & MAXUTC & vbCrLf &
-            '       "Tempo trascorso=" & DateDiff(DateInterval.Second, MINUTC, MAXUTC) & vbCrLf &
-            '       "Distanza totale=" & DistanceTot & vbCrLf &
-            '       "Velocità media m/s=" & DistanceTot / DateDiff(DateInterval.Second, MINUTC, MAXUTC) & vbCrLf &
-            '       "Velocità media Km/h=" & (DistanceTot / 1000) / (DateDiff(DateInterval.Second, MINUTC, MAXUTC) / 3600) & vbCrLf &
-            '       "Velocità massima m/s=" & MaxSpeed & vbCrLf &
-            '       "Velocità massima km/h=" & MaxSpeed * 3600 / 1000)
-
-            Dim MeanSpeed As Single = (DistanceTot / 1000) / (DateDiff(DateInterval.Second, MINUTC, MAXUTC) / 3600)
-            Dim PeakSpeed As Single = MaxSpeed * 3600 / 1000
+        Dim MeanSpeed As Single = (DistanceTot / 1000) / (DateDiff(DateInterval.Second, MINUTC, MAXUTC) / 3600)
+        Dim PeakSpeed As Single = MaxSpeed * 3600 / 1000
 
         RenderGraph(Titolo.Text, MINALT, MAXALT, MINUTC, MAXUTC, MeanSpeed, PeakSpeed, DistanceTot, MovingTime, TotalHigh, TotalDesc, GIS, GPXFileName)
-
 
     End Sub
 
     Private Sub Master_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.CenterToScreen()
+        TrackBarSogliaMovimento.Maximum = 1
+        TrackBarSogliaMovimento.Maximum = 20
+        TrackBarSogliaMovimento.Value = 5
+        SpeedThresholdLBL.Text = "0,5 Km/h"
+        SpeedThreshold = 0.5
+
+        TrackBarMM.Maximum = 50
+        TrackBarMM.Minimum = 3
+        TrackBarMM.Value = 10
+        MM = 10
+        MMLBL.Text = "10 elementi"
     End Sub
 
     Private Sub SaveBMP_Click(sender As Object, e As EventArgs) Handles SaveBMP.Click
-
-    End Sub
-
-    Private Sub Titolo_TextChanged(sender As Object, e As EventArgs) Handles Titolo.TextChanged
+        BMPSave = True
         If GPXFileName <> "" Then RenderData()
     End Sub
+
+
+    Private Sub Titolo_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Titolo.KeyPress
+        If e.KeyChar = vbCr Then
+            If GPXFileName <> "" Then RenderData()
+        End If
+    End Sub
+
+    Private Sub TrackBarSogliaMovimento_Scroll(sender As Object, e As EventArgs) Handles TrackBarSogliaMovimento.Scroll
+        SpeedThreshold = TrackBarSogliaMovimento.Value / 10
+        SpeedThresholdLBL.Text = SpeedThreshold & " Km/h"
+        If GPXFileName <> "" Then RenderData()
+    End Sub
+
+    Private Sub TrackBarMM_Scroll(sender As Object, e As EventArgs) Handles TrackBarMM.Scroll
+        MM = TrackBarMM.Value
+        MMLBL.Text = TrackBarMM.Value & " elementi"
+        If GPXFileName <> "" Then RenderData()
+    End Sub
+
 End Class

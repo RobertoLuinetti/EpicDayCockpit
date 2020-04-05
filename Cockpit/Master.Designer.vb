@@ -36,22 +36,25 @@ Partial Class Master
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.SpeedThr = New System.Windows.Forms.TextBox()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.Titolo = New System.Windows.Forms.TextBox()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.CheckBox_H = New System.Windows.Forms.CheckBox()
         Me.CheckBox_V = New System.Windows.Forms.CheckBox()
-        Me.CheckBox_HSmooth = New System.Windows.Forms.CheckBox()
-        Me.CheckBoxDSmooth = New System.Windows.Forms.CheckBox()
         Me.SaveBMP = New System.Windows.Forms.Button()
+        Me.TrackBarSogliaMovimento = New System.Windows.Forms.TrackBar()
+        Me.SpeedThresholdLBL = New System.Windows.Forms.Label()
+        Me.MMLBL = New System.Windows.Forms.Label()
+        Me.TrackBarMM = New System.Windows.Forms.TrackBar()
+        Me.Label5 = New System.Windows.Forms.Label()
         CType(Me.picGraph, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.TrackBarSogliaMovimento, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.TrackBarMM, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'picGraph
         '
         Me.picGraph.BackColor = System.Drawing.Color.Black
-        Me.picGraph.Location = New System.Drawing.Point(12, 79)
+        Me.picGraph.Location = New System.Drawing.Point(12, 96)
         Me.picGraph.Name = "picGraph"
         Me.picGraph.Size = New System.Drawing.Size(960, 540)
         Me.picGraph.TabIndex = 0
@@ -67,7 +70,7 @@ Partial Class Master
         '
         'LatG
         '
-        Me.LatG.Location = New System.Drawing.Point(268, 13)
+        Me.LatG.Location = New System.Drawing.Point(257, 13)
         Me.LatG.Name = "LatG"
         Me.LatG.Size = New System.Drawing.Size(19, 20)
         Me.LatG.TabIndex = 4
@@ -76,7 +79,7 @@ Partial Class Master
         '
         'LatP
         '
-        Me.LatP.Location = New System.Drawing.Point(293, 13)
+        Me.LatP.Location = New System.Drawing.Point(282, 13)
         Me.LatP.Name = "LatP"
         Me.LatP.Size = New System.Drawing.Size(19, 20)
         Me.LatP.TabIndex = 5
@@ -85,7 +88,7 @@ Partial Class Master
         '
         'LongP
         '
-        Me.LongP.Location = New System.Drawing.Point(464, 13)
+        Me.LongP.Location = New System.Drawing.Point(443, 13)
         Me.LongP.Name = "LongP"
         Me.LongP.Size = New System.Drawing.Size(19, 20)
         Me.LongP.TabIndex = 8
@@ -94,7 +97,7 @@ Partial Class Master
         '
         'LongG
         '
-        Me.LongG.Location = New System.Drawing.Point(439, 13)
+        Me.LongG.Location = New System.Drawing.Point(418, 13)
         Me.LongG.Name = "LongG"
         Me.LongG.Size = New System.Drawing.Size(19, 20)
         Me.LongG.TabIndex = 7
@@ -103,7 +106,7 @@ Partial Class Master
         '
         'LatS
         '
-        Me.LatS.Location = New System.Drawing.Point(318, 13)
+        Me.LatS.Location = New System.Drawing.Point(307, 13)
         Me.LatS.Name = "LatS"
         Me.LatS.Size = New System.Drawing.Size(35, 20)
         Me.LatS.TabIndex = 10
@@ -112,7 +115,7 @@ Partial Class Master
         '
         'LongS
         '
-        Me.LongS.Location = New System.Drawing.Point(489, 13)
+        Me.LongS.Location = New System.Drawing.Point(468, 13)
         Me.LongS.Name = "LongS"
         Me.LongS.Size = New System.Drawing.Size(35, 20)
         Me.LongS.TabIndex = 11
@@ -121,7 +124,7 @@ Partial Class Master
         '
         'ButtonGPX
         '
-        Me.ButtonGPX.Location = New System.Drawing.Point(670, 6)
+        Me.ButtonGPX.Location = New System.Drawing.Point(546, 10)
         Me.ButtonGPX.Name = "ButtonGPX"
         Me.ButtonGPX.Size = New System.Drawing.Size(75, 23)
         Me.ButtonGPX.TabIndex = 13
@@ -130,7 +133,7 @@ Partial Class Master
         '
         'LatQ
         '
-        Me.LatQ.Location = New System.Drawing.Point(359, 13)
+        Me.LatQ.Location = New System.Drawing.Point(348, 13)
         Me.LatQ.Name = "LatQ"
         Me.LatQ.Size = New System.Drawing.Size(13, 20)
         Me.LatQ.TabIndex = 14
@@ -139,7 +142,7 @@ Partial Class Master
         '
         'LongQ
         '
-        Me.LongQ.Location = New System.Drawing.Point(530, 13)
+        Me.LongQ.Location = New System.Drawing.Point(509, 13)
         Me.LongQ.Name = "LongQ"
         Me.LongQ.Size = New System.Drawing.Size(13, 20)
         Me.LongQ.TabIndex = 15
@@ -149,7 +152,7 @@ Partial Class Master
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(235, 16)
+        Me.Label1.Location = New System.Drawing.Point(224, 16)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(27, 13)
         Me.Label1.TabIndex = 16
@@ -158,7 +161,7 @@ Partial Class Master
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(396, 16)
+        Me.Label2.Location = New System.Drawing.Point(375, 16)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(37, 13)
         Me.Label2.TabIndex = 17
@@ -167,33 +170,15 @@ Partial Class Master
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(12, 45)
+        Me.Label3.Location = New System.Drawing.Point(652, 11)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(119, 13)
+        Me.Label3.Size = New System.Drawing.Size(90, 13)
         Me.Label3.TabIndex = 19
-        Me.Label3.Text = "Soglia movimento Km/h"
-        '
-        'SpeedThr
-        '
-        Me.SpeedThr.Location = New System.Drawing.Point(137, 42)
-        Me.SpeedThr.Name = "SpeedThr"
-        Me.SpeedThr.Size = New System.Drawing.Size(27, 20)
-        Me.SpeedThr.TabIndex = 18
-        Me.SpeedThr.Text = "0,5"
-        Me.SpeedThr.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(188, 45)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(33, 13)
-        Me.Label4.TabIndex = 21
-        Me.Label4.Text = "Titolo"
+        Me.Label3.Text = "Soglia movimento"
         '
         'Titolo
         '
-        Me.Titolo.Location = New System.Drawing.Point(228, 42)
+        Me.Titolo.Location = New System.Drawing.Point(12, 45)
         Me.Titolo.Name = "Titolo"
         Me.Titolo.Size = New System.Drawing.Size(422, 20)
         Me.Titolo.TabIndex = 20
@@ -207,7 +192,7 @@ Partial Class Master
         'CheckBox_H
         '
         Me.CheckBox_H.AutoSize = True
-        Me.CheckBox_H.Location = New System.Drawing.Point(794, 15)
+        Me.CheckBox_H.Location = New System.Drawing.Point(443, 70)
         Me.CheckBox_H.Name = "CheckBox_H"
         Me.CheckBox_H.Size = New System.Drawing.Size(60, 17)
         Me.CheckBox_H.TabIndex = 22
@@ -217,56 +202,80 @@ Partial Class Master
         'CheckBox_V
         '
         Me.CheckBox_V.AutoSize = True
-        Me.CheckBox_V.Location = New System.Drawing.Point(794, 44)
+        Me.CheckBox_V.Location = New System.Drawing.Point(443, 48)
         Me.CheckBox_V.Name = "CheckBox_V"
         Me.CheckBox_V.Size = New System.Drawing.Size(64, 17)
         Me.CheckBox_V.TabIndex = 23
         Me.CheckBox_V.Text = "Velocità"
         Me.CheckBox_V.UseVisualStyleBackColor = True
         '
-        'CheckBox_HSmooth
-        '
-        Me.CheckBox_HSmooth.AutoSize = True
-        Me.CheckBox_HSmooth.Location = New System.Drawing.Point(882, 15)
-        Me.CheckBox_HSmooth.Name = "CheckBox_HSmooth"
-        Me.CheckBox_HSmooth.Size = New System.Drawing.Size(62, 17)
-        Me.CheckBox_HSmooth.TabIndex = 24
-        Me.CheckBox_HSmooth.Text = "Smooth"
-        Me.CheckBox_HSmooth.UseVisualStyleBackColor = True
-        '
-        'CheckBoxDSmooth
-        '
-        Me.CheckBoxDSmooth.AutoSize = True
-        Me.CheckBoxDSmooth.Location = New System.Drawing.Point(882, 44)
-        Me.CheckBoxDSmooth.Name = "CheckBoxDSmooth"
-        Me.CheckBoxDSmooth.Size = New System.Drawing.Size(62, 17)
-        Me.CheckBoxDSmooth.TabIndex = 25
-        Me.CheckBoxDSmooth.Text = "Smooth"
-        Me.CheckBoxDSmooth.UseVisualStyleBackColor = True
-        '
         'SaveBMP
         '
-        Me.SaveBMP.Location = New System.Drawing.Point(670, 39)
+        Me.SaveBMP.Location = New System.Drawing.Point(546, 42)
         Me.SaveBMP.Name = "SaveBMP"
         Me.SaveBMP.Size = New System.Drawing.Size(75, 23)
         Me.SaveBMP.TabIndex = 26
         Me.SaveBMP.Text = "Save BMP"
         Me.SaveBMP.UseVisualStyleBackColor = True
         '
+        'TrackBarSogliaMovimento
+        '
+        Me.TrackBarSogliaMovimento.Location = New System.Drawing.Point(638, 42)
+        Me.TrackBarSogliaMovimento.Name = "TrackBarSogliaMovimento"
+        Me.TrackBarSogliaMovimento.Size = New System.Drawing.Size(117, 45)
+        Me.TrackBarSogliaMovimento.TabIndex = 27
+        Me.TrackBarSogliaMovimento.TickFrequency = 5
+        '
+        'SpeedThresholdLBL
+        '
+        Me.SpeedThresholdLBL.AutoSize = True
+        Me.SpeedThresholdLBL.Location = New System.Drawing.Point(674, 26)
+        Me.SpeedThresholdLBL.Name = "SpeedThresholdLBL"
+        Me.SpeedThresholdLBL.Size = New System.Drawing.Size(36, 13)
+        Me.SpeedThresholdLBL.TabIndex = 28
+        Me.SpeedThresholdLBL.Text = " Km/h"
+        '
+        'MMLBL
+        '
+        Me.MMLBL.AutoSize = True
+        Me.MMLBL.Location = New System.Drawing.Point(791, 26)
+        Me.MMLBL.Name = "MMLBL"
+        Me.MMLBL.Size = New System.Drawing.Size(46, 13)
+        Me.MMLBL.TabIndex = 31
+        Me.MMLBL.Text = "elementi"
+        '
+        'TrackBarMM
+        '
+        Me.TrackBarMM.Location = New System.Drawing.Point(761, 42)
+        Me.TrackBarMM.Name = "TrackBarMM"
+        Me.TrackBarMM.Size = New System.Drawing.Size(117, 45)
+        Me.TrackBarMM.TabIndex = 30
+        Me.TrackBarMM.TickFrequency = 10
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(766, 10)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(107, 13)
+        Me.Label5.TabIndex = 29
+        Me.Label5.Text = "Media Mobile Altezza"
+        '
         'Master
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(984, 631)
+        Me.ClientSize = New System.Drawing.Size(984, 647)
+        Me.Controls.Add(Me.MMLBL)
+        Me.Controls.Add(Me.TrackBarMM)
+        Me.Controls.Add(Me.Label5)
+        Me.Controls.Add(Me.SpeedThresholdLBL)
+        Me.Controls.Add(Me.TrackBarSogliaMovimento)
         Me.Controls.Add(Me.SaveBMP)
-        Me.Controls.Add(Me.CheckBoxDSmooth)
-        Me.Controls.Add(Me.CheckBox_HSmooth)
         Me.Controls.Add(Me.CheckBox_V)
         Me.Controls.Add(Me.CheckBox_H)
-        Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Titolo)
         Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.SpeedThr)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.LongQ)
@@ -283,6 +292,8 @@ Partial Class Master
         Me.Name = "Master"
         Me.Text = "Epic Day Cockpit"
         CType(Me.picGraph, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.TrackBarSogliaMovimento, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.TrackBarMM, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -302,12 +313,14 @@ Partial Class Master
     Friend WithEvents Label2 As Label
     Friend WithEvents Label3 As Label
     Friend WithEvents SpeedThr As TextBox
-    Friend WithEvents Label4 As Label
     Friend WithEvents Titolo As TextBox
     Friend WithEvents OpenFileDialog1 As OpenFileDialog
     Friend WithEvents CheckBox_H As CheckBox
     Friend WithEvents CheckBox_V As CheckBox
-    Friend WithEvents CheckBox_HSmooth As CheckBox
-    Friend WithEvents CheckBoxDSmooth As CheckBox
     Friend WithEvents SaveBMP As Button
+    Friend WithEvents TrackBarSogliaMovimento As TrackBar
+    Friend WithEvents SpeedThresholdLBL As Label
+    Friend WithEvents MMLBL As Label
+    Friend WithEvents TrackBarMM As TrackBar
+    Friend WithEvents Label5 As Label
 End Class

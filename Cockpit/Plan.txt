@@ -16,5 +16,5 @@ scalata e discesa su media mobile 10 elementi
 Merge del codice con la libreria
 aumentare risoluzione in OVS
 GoPro come webcam PC
-GitHub Versioning ?
-scrittura nel grafico
+//GitHub Versioning ? --> Azure
+//scrittura nel grafico

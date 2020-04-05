@@ -124,8 +124,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Moon_ico.bmp" />
+    <EmbeddedResource Include="Logo_BTS_midi.bmp" />
     <Content Include="My Project\TextFile1.txt" />
     <Content Include="Plan.txt" />
+    <EmbeddedResource Include="Sun_ico.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
