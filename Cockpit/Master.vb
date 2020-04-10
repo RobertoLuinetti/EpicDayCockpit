@@ -3,8 +3,11 @@
     Dim GPXFileName As String
     Dim BMPSave As Boolean = False
     Dim SpeedThreshold As Single
-    Dim MM As Single
+    Dim HSmootDepth As Single
+    Dim VSmootDepth As Single
     Dim GIS(,) As String
+    Dim HGridSize As Single
+    Dim SGridSize As Single
 
     Private Sub RenderGraph(Titolo As String, MINALT As Single, MAXALT As Single, MINUTC As Date, MAXUTC As Date, MeanSpeed As Single, PeakSpeed As Single, DistanceTot As Single, MovingTime As Single, TotalHigh As Single, TotalDesc As Single, ByRef GIS As String(,), InFile As String)
         Me.Cursor = Cursors.WaitCursor
@@ -175,20 +178,20 @@
 
 
             'ALTEZZA =====================================================================================
-            Dim Ytop As Single = MAXALT - MAXALT Mod 50 + 50
-            Dim Ybot As Single = MINALT - MINALT Mod 50
+            Dim Ytop As Single = MAXALT - MAXALT Mod HGridSize + HGridSize
+            Dim Ybot As Single = MINALT - MINALT Mod HGridSize
 
             SetDisplayPhysicalArea(picGraph, 960, 540, 400, 200, 500, 110)
             SetScale(NumtimeStart, NumtimeStop, Ybot, Ytop)
             Frame(gr, PenGreen)
-            Axes(gr, PenGreen, HourStart, 0, 10, 10)
-            Axes(gr, PenGreen, NumtimeStart, 0, 1000, 10)
-            Grid(gr, PenGreen, HourStart, 0, 3, 50)
+            Axes(gr, PenGreen, HourStart, Ybot, 1, HGridSize / 2) 'marca il tick sull'asse orizzontale
+            Axes(gr, PenGreen, NumtimeStart, 0, 1, HGridSize / 2) 'Marca con i tick asse verticale
+            Grid(gr, PenGreen, HourStart, 0, 3, HGridSize)
             GraphTitle(gr, "Profilo altimetrico", "Arbutus Slab", 12)
             XTitle(gr, "Ora locale", "Verdana", 8)
             YTitle(gr, "Altezza metri", "Verdana", 8)
             XTickLabel(gr, HourStart, 1, "Verdana", 7)
-            YTickLabel(gr, 0, 50, "Verdana", 7)
+            YTickLabel(gr, 0, HGridSize, "Verdana", 7)
             GetPhysicalCoords(NumtimeStart, Ytop, LBX, LBY)
             GetPhysicalCoords(NumtimeStop, Ytop, RBX, RBY)
             gr.DrawLine(PenCyan, LTX, LTY, LBX, LBY)
@@ -196,13 +199,30 @@
             Dim ALTTime As Single
             Dim ALTY As Single
 
+            Dim AverageValue As Single
+            Dim z As Single = 0
             'MsgBox(DateDiff(DateInterval.Second, CType(MINUTC.ToShortDateString, Date), MINUTC) / 3600)
             For n = 1 To GIS.GetUpperBound(1)
                 ALTTime = (DateDiff(DateInterval.Second, CType(MINUTC.ToShortDateString, Date), MINUTC) / 3600) + CType(DateDiff(DateInterval.Second, MINUTC, CType(GIS(UTC, n), Date)), Single) / 3600
-                ALTY = CType(GIS(ALT, n).Replace(".", ","), Single) '- MINALT) '/ (MAXALT - MINALT) * 90
-                If n > 1 Then Draw(gr, PenYellow, prev_n, prev_y, ALTTime, ALTY)
-                prev_n = ALTTime
-                prev_y = ALTY
+                ALTY = CType(GIS(ALT, n).Replace(".", ","), Single)
+                Plot(gr, Color.DodgerBlue, ALTTime, ALTY) 'If n > 1 Then Draw(gr, PenDarkBlue, prev_n, prev_y, ALTTime, ALTY)
+                ALTY = CType(GIS(ALT, n).Replace(".", ","), Single)
+                Plot(gr, Color.DodgerBlue, ALTTime, ALTY) 'If n > 1 Then Draw(gr, PenDarkBlue, prev_n, prev_y, ALTTime, ALTY)
+                AverageValue = 0
+                z = 0
+                If n > HSmootDepth + 1 And n < GIS.GetUpperBound(1) - HSmootDepth Then
+                    For m = (n - HSmootDepth) To (n + HSmootDepth) Step 1
+                        AverageValue += CType(GIS(ALT, m).Replace(".", ","), Single)
+                        z = z + 1
+                    Next m
+                    AverageValue = AverageValue / z
+                    'Plot(gr, Color.Yellow, ALTTime, AverageValue)
+                    If n > HSmootDepth + 2 Then Draw(gr, PenYellow, prev_n, prev_y, ALTTime, AverageValue)
+                    prev_n = ALTTime
+                    prev_y = AverageValue
+                End If
+                'prev_n = ALTTime
+                'prev_y = AverageValue
                 If DebugData.Checked = True Then Flog("ASTRO.CSV", LogCMD.Write, "ALTEZZA" & vbTab & ALTTime & vbTab & ALTY)
             Next n
 
@@ -221,19 +241,21 @@
             '    Next n
             'End Using
 
-            'VELOCITÀ
-            Dim YtopS As Single = PeakSpeed - PeakSpeed Mod 10 + 10
+
+            'VELOCITÀ======================================================================
+            Dim YtopS As Single = PeakSpeed - PeakSpeed Mod SGridSize + SGridSize
+            Dim YbotS As Single = 0
             SetDisplayPhysicalArea(picGraph, 960, 540, 400, 35, 500, 110)
             SetScale(NumtimeStart, NumtimeStop, 0, YtopS)
             Frame(gr, PenGreen)
-            Axes(gr, PenGreen, HourStart, 0, 1, 5)
-            Axes(gr, PenGreen, NumtimeStart, 0, 1000, 5)
-            Grid(gr, PenGreen, HourStart, 0, 3, 10)
+            Axes(gr, PenGreen, HourStart, YbotS, 1, SGridSize / 2)   'marca il tick sull'asse orizzontale
+            Axes(gr, PenGreen, NumtimeStart, 0, 1000, SGridSize / 2) 'Marca con i tick asse verticale
+            Grid(gr, PenGreen, HourStart, YbotS, 3, SGridSize)
             GraphTitle(gr, "Velocità", "Arbutus Slab", 12)
             XTitle(gr, "Ora locale", "Verdana", 8)
             YTitle(gr, "Velocità Km/h", "Verdana", 8)
             XTickLabel(gr, HourStart, 1, "Verdana", 7)
-            YTickLabel(gr, 0, 20, "Verdana", 7)
+            YTickLabel(gr, 0, SGridSize, "Verdana", 7)
 
             Dim SPDTime As Single
             Dim SPDY As Single
@@ -242,9 +264,21 @@
             For n = 2 To GIS.GetUpperBound(1)
                 SPDTime = (DateDiff(DateInterval.Second, CType(MINUTC.ToShortDateString, Date), MINUTC) / 3600) + CType(DateDiff(DateInterval.Second, MINUTC, CType(GIS(UTC, n), Date)), Single) / 3600
                 SPDY = CType(GIS(SPD, n).Replace(".", ","), Single) * 3600 / 1000
-                If n > 2 Then Draw(gr, PenYellow, prev_n, prev_y, SPDTime, SPDY)
-                prev_n = SPDTime
-                prev_y = SPDY
+                Plot(gr, Color.DodgerBlue, SPDTime, SPDY) 'If n > 2 Then Draw(gr, PenDarkBlue, prev_n, prev_y, SPDTime, SPDY)
+                AverageValue = 0
+                z = 0
+                If n > VSmootDepth + 1 And n < GIS.GetUpperBound(1) - VSmootDepth Then
+                    For m = (n - VSmootDepth) To (n + VSmootDepth) Step 1
+                        AverageValue += CType(GIS(SPD, m).Replace(".", ","), Single) * 3600 / 1000
+                        z = z + 1
+                    Next m
+                    AverageValue = AverageValue / z
+                    'Plot(gr, Color.Yellow, SPDTime, AverageValue)
+                    If n > VSmootDepth + 2 Then Draw(gr, PenYellow, prev_n, prev_y, SPDTime, AverageValue)
+                    prev_n = SPDTime
+                    prev_y = AverageValue
+                End If
+
             Next n
 
             If DebugData.Checked = True Then Flog("ASTRO.CSV", LogCMD.Close)
@@ -342,6 +376,9 @@
 
         'GIS = GPX.ReadGPX(GPXFileName)
 
+        Dim z As Single = 0
+        Dim DeltaH As Single
+        Dim MaxDeltaH As Single
         For n = 1 To GIS.GetUpperBound(1)
             If CType(GIS(LAT, n).Replace(".", ","), Single) > MAXLAT Then MAXLAT = CType(GIS(LAT, n).Replace(".", ","), Single)
             If CType(GIS(LON, n).Replace(".", ","), Single) > MAXLON Then MAXLON = CType(GIS(LON, n).Replace(".", ","), Single)
@@ -372,13 +409,18 @@
                 CurrentSpeed = Distance / DateDiff(DateInterval.Second, PrevInstant, CurrInstant)
                 GIS(SPD, n) = CurrentSpeed
                 If CurrentSpeed > MaxSpeed Then MaxSpeed = CurrentSpeed
-                If n > MM + 1 Then
-                    For m = n To (n - MM) Step -1
+                DeltaH = Math.Abs(CType(GIS(ALT, n).Replace(".", ","), Single) - CType(GIS(ALT, n - 1).Replace(".", ","), Single))
+                If DeltaH > MaxDeltaH Then DeltaH = MaxDeltaH
+
+                If n > HSmootDepth + 1 And n < GIS.GetUpperBound(1) - HSmootDepth Then 'If n > HSmootDepth + 1 Then
+                    z = 0
+                    For m = (n - HSmootDepth) To (n + HSmootDepth) Step 1 'For m = n To (n - HSmootDepth) Step -1
                         AverageALTC += CType(GIS(ALT, m).Replace(".", ","), Single)
                         AverageALTP += CType(GIS(ALT, m - 1).Replace(".", ","), Single)
+                        z = z + 1
                     Next m
-                    AverageALTC = AverageALTC / MM
-                    AverageALTP = AverageALTP / MM
+                    AverageALTC = AverageALTC / z
+                    AverageALTP = AverageALTP / z
                     If AverageALTC > AverageALTP Then TotalHigh += AverageALTC - AverageALTP
                     If AverageALTC < AverageALTP Then TotalDesc += AverageALTP - AverageALTC
                 End If
@@ -428,13 +470,48 @@
         SpeedThresholdLBL.Text = "0,5 Km/h"
         SpeedThreshold = 0.5
 
-        TrackBarMM.Maximum = 50
-        TrackBarMM.Minimum = 3
-        TrackBarMM.Value = 10
-        MM = 10
-        MMLBL.Text = "10 elementi"
+        TrackBarMM.Maximum = 25
+        TrackBarMM.Minimum = 2
+        TrackBarMM.Value = 2
+        HSmootDepth = 2
+        MMLBL.Text = "2 elements"
+
+        TrackBarSP.Maximum = 25
+        TrackBarSP.Minimum = 2
+        TrackBarSP.Value = 2
+        VSmootDepth = 2
+        VMMLBL.Text = "2 elements"
 
         DebugData.Checked = False
+
+        HGridSize = 50
+        SGridSize = 5
+
+        ComboBoxStepH.Items.Clear()
+        ComboBoxStepH.Items.Add("5")
+        ComboBoxStepH.Items.Add("10")
+        ComboBoxStepH.Items.Add("25")
+        ComboBoxStepH.Items.Add("50")
+        ComboBoxStepH.Items.Add("100")
+        ComboBoxStepH.Items.Add("250")
+        ComboBoxStepH.Items.Add("500")
+        ComboBoxStepH.Items.Add("1000")
+
+        ComboBoxStepS.Items.Clear()
+        ComboBoxStepS.Items.Add("1")
+        ComboBoxStepS.Items.Add("5")
+        ComboBoxStepS.Items.Add("10")
+        ComboBoxStepS.Items.Add("20")
+        ComboBoxStepS.Items.Add("25")
+        ComboBoxStepS.Items.Add("50")
+        ComboBoxStepS.Items.Add("100")
+        LinkLabelAstro.Text = "Astro.csv"
+        LinkLabelAstro.Links.Add(0, 9, My.Computer.FileSystem.SpecialDirectories.Temp & "\Astro.csv")
+        LinkLabelAstro.Visible = False
+        LinkLabelGis.Text = "GIS.csv"
+        LinkLabelGis.Links.Add(0, 7, My.Computer.FileSystem.SpecialDirectories.Temp & "\GIS.csv")
+        LinkLabelGis.Visible = False
+
     End Sub
 
     Private Sub SaveBMP_Click(sender As Object, e As EventArgs) Handles SaveBMP.Click
@@ -456,12 +533,41 @@
     End Sub
 
     Private Sub TrackBarMM_Scroll(sender As Object, e As EventArgs) Handles TrackBarMM.Scroll
-        MM = TrackBarMM.Value
-        MMLBL.Text = TrackBarMM.Value & " elementi"
+        HSmootDepth = TrackBarMM.Value
+        MMLBL.Text = HSmootDepth * 2 & " elementi"
+        If GPXFileName <> "" Then RenderData()
+    End Sub
+    Private Sub TrackBarSP_Scroll(sender As Object, e As EventArgs) Handles TrackBarSP.Scroll
+        VSmootDepth = TrackBarSP.Value
+        VMMLBL.Text = VSmootDepth * 2 & " elementi"
+        If GPXFileName <> "" Then RenderData()
+    End Sub
+    Private Sub DebugData_CheckedChanged(sender As Object, e As EventArgs) Handles DebugData.CheckedChanged
+        If GPXFileName <> "" Then RenderData()
+        If DebugData.Checked = True Then
+            If System.IO.File.Exists(My.Computer.FileSystem.SpecialDirectories.Temp & "\Astro.csv") Then LinkLabelAstro.Visible = True
+            If System.IO.File.Exists(My.Computer.FileSystem.SpecialDirectories.Temp & "\GIS.csv") Then LinkLabelGis.Visible = True
+        Else
+            LinkLabelAstro.Visible = False
+            LinkLabelGis.Visible = False
+        End If
+    End Sub
+
+    Private Sub ComboBoxStepH_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBoxStepH.SelectedIndexChanged
+        HGridSize = Convert.ToSingle(ComboBoxStepH.SelectedItem.ToString())
         If GPXFileName <> "" Then RenderData()
     End Sub
 
-    Private Sub DebugData_CheckedChanged(sender As Object, e As EventArgs) Handles DebugData.CheckedChanged
+    Private Sub ComboBoxStepS_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBoxStepS.SelectedIndexChanged
+        SGridSize = Convert.ToSingle(ComboBoxStepS.SelectedItem.ToString())
         If GPXFileName <> "" Then RenderData()
+    End Sub
+
+    Private Sub LinkLabelAstro_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabelAstro.LinkClicked
+        System.Diagnostics.Process.Start(e.Link.LinkData.ToString())
+    End Sub
+
+    Private Sub LinkLabelGis_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabelGis.LinkClicked
+        System.Diagnostics.Process.Start(e.Link.LinkData.ToString())
     End Sub
 End Class

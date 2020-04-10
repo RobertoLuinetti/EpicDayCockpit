@@ -12,10 +12,7 @@
         'Instantiate an XmlDocument object. 
         Dim xmldoc As New System.Xml.XmlDocument()
         Dim GPSInfoNode As System.Xml.XmlNode
-        'Dim Attr As System.Xml.XmlAttribute
 
-        'Load books.xml into the XmlDocument object. 
-        'xmldoc.Load("C:\Users\Roberto\Videos\thoni-instagram.mp4.gpx")
         xmldoc.Load(FileName)
 
 

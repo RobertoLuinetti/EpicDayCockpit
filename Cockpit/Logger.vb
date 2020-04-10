@@ -11,7 +11,7 @@
 
         Select Case Command
             Case LogCMD.NewFile
-                file = My.Computer.FileSystem.OpenTextFileWriter(Filename, True)
+                file = My.Computer.FileSystem.OpenTextFileWriter(My.Computer.FileSystem.SpecialDirectories.Temp & "\" & Filename, True)
             Case LogCMD.Write
                 file.WriteLine(Message)
             Case LogCMD.Close

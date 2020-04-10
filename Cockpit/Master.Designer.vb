@@ -45,11 +45,19 @@ Partial Class Master
         Me.MMLBL = New System.Windows.Forms.Label()
         Me.TrackBarMM = New System.Windows.Forms.TrackBar()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.RadioButton1 = New System.Windows.Forms.RadioButton()
-        Me.RadioButton2 = New System.Windows.Forms.RadioButton()
+        Me.ComboBoxStepH = New System.Windows.Forms.ComboBox()
+        Me.ComboBoxStepS = New System.Windows.Forms.ComboBox()
+        Me.VMMLBL = New System.Windows.Forms.Label()
+        Me.TrackBarSP = New System.Windows.Forms.TrackBar()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.LinkLabelAstro = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabelGis = New System.Windows.Forms.LinkLabel()
         CType(Me.picGraph, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBarSogliaMovimento, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.TrackBarMM, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.TrackBarSP, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'picGraph
@@ -65,13 +73,13 @@ Partial Class Master
         '
         Me.DateTimePicker1.Location = New System.Drawing.Point(12, 13)
         Me.DateTimePicker1.Name = "DateTimePicker1"
-        Me.DateTimePicker1.Size = New System.Drawing.Size(200, 20)
+        Me.DateTimePicker1.Size = New System.Drawing.Size(181, 20)
         Me.DateTimePicker1.TabIndex = 2
         Me.DateTimePicker1.Value = New Date(2019, 12, 24, 12, 0, 0, 0)
         '
         'LatG
         '
-        Me.LatG.Location = New System.Drawing.Point(257, 13)
+        Me.LatG.Location = New System.Drawing.Point(62, 39)
         Me.LatG.Name = "LatG"
         Me.LatG.Size = New System.Drawing.Size(19, 20)
         Me.LatG.TabIndex = 4
@@ -80,7 +88,7 @@ Partial Class Master
         '
         'LatP
         '
-        Me.LatP.Location = New System.Drawing.Point(282, 13)
+        Me.LatP.Location = New System.Drawing.Point(87, 39)
         Me.LatP.Name = "LatP"
         Me.LatP.Size = New System.Drawing.Size(19, 20)
         Me.LatP.TabIndex = 5
@@ -89,7 +97,7 @@ Partial Class Master
         '
         'LongP
         '
-        Me.LongP.Location = New System.Drawing.Point(443, 13)
+        Me.LongP.Location = New System.Drawing.Point(87, 65)
         Me.LongP.Name = "LongP"
         Me.LongP.Size = New System.Drawing.Size(19, 20)
         Me.LongP.TabIndex = 8
@@ -98,7 +106,7 @@ Partial Class Master
         '
         'LongG
         '
-        Me.LongG.Location = New System.Drawing.Point(418, 13)
+        Me.LongG.Location = New System.Drawing.Point(62, 65)
         Me.LongG.Name = "LongG"
         Me.LongG.Size = New System.Drawing.Size(19, 20)
         Me.LongG.TabIndex = 7
@@ -107,7 +115,7 @@ Partial Class Master
         '
         'LatS
         '
-        Me.LatS.Location = New System.Drawing.Point(307, 13)
+        Me.LatS.Location = New System.Drawing.Point(112, 39)
         Me.LatS.Name = "LatS"
         Me.LatS.Size = New System.Drawing.Size(35, 20)
         Me.LatS.TabIndex = 10
@@ -116,7 +124,7 @@ Partial Class Master
         '
         'LongS
         '
-        Me.LongS.Location = New System.Drawing.Point(468, 13)
+        Me.LongS.Location = New System.Drawing.Point(112, 65)
         Me.LongS.Name = "LongS"
         Me.LongS.Size = New System.Drawing.Size(35, 20)
         Me.LongS.TabIndex = 11
@@ -125,7 +133,7 @@ Partial Class Master
         '
         'ButtonGPX
         '
-        Me.ButtonGPX.Location = New System.Drawing.Point(546, 10)
+        Me.ButtonGPX.Location = New System.Drawing.Point(199, 36)
         Me.ButtonGPX.Name = "ButtonGPX"
         Me.ButtonGPX.Size = New System.Drawing.Size(75, 23)
         Me.ButtonGPX.TabIndex = 13
@@ -134,7 +142,7 @@ Partial Class Master
         '
         'LatQ
         '
-        Me.LatQ.Location = New System.Drawing.Point(348, 13)
+        Me.LatQ.Location = New System.Drawing.Point(153, 39)
         Me.LatQ.Name = "LatQ"
         Me.LatQ.Size = New System.Drawing.Size(13, 20)
         Me.LatQ.TabIndex = 14
@@ -143,7 +151,7 @@ Partial Class Master
         '
         'LongQ
         '
-        Me.LongQ.Location = New System.Drawing.Point(509, 13)
+        Me.LongQ.Location = New System.Drawing.Point(153, 65)
         Me.LongQ.Name = "LongQ"
         Me.LongQ.Size = New System.Drawing.Size(13, 20)
         Me.LongQ.TabIndex = 15
@@ -153,7 +161,7 @@ Partial Class Master
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(224, 16)
+        Me.Label1.Location = New System.Drawing.Point(29, 42)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(27, 13)
         Me.Label1.TabIndex = 16
@@ -162,7 +170,7 @@ Partial Class Master
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(375, 16)
+        Me.Label2.Location = New System.Drawing.Point(19, 68)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(37, 13)
         Me.Label2.TabIndex = 17
@@ -171,19 +179,19 @@ Partial Class Master
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(652, 11)
+        Me.Label3.Location = New System.Drawing.Point(504, 9)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(90, 13)
+        Me.Label3.Size = New System.Drawing.Size(103, 13)
         Me.Label3.TabIndex = 19
-        Me.Label3.Text = "Soglia movimento"
+        Me.Label3.Text = "Movement threshold"
         '
         'Titolo
         '
-        Me.Titolo.Location = New System.Drawing.Point(12, 45)
+        Me.Titolo.Location = New System.Drawing.Point(199, 13)
         Me.Titolo.Name = "Titolo"
-        Me.Titolo.Size = New System.Drawing.Size(422, 20)
+        Me.Titolo.Size = New System.Drawing.Size(289, 20)
         Me.Titolo.TabIndex = 20
-        Me.Titolo.Text = "Titolo Titolo Titolo Titolo Titolo Titolo Titolo "
+        Me.Titolo.Text = "Titolo"
         Me.Titolo.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'OpenFileDialog1
@@ -193,7 +201,7 @@ Partial Class Master
         'DebugData
         '
         Me.DebugData.AutoSize = True
-        Me.DebugData.Location = New System.Drawing.Point(12, 73)
+        Me.DebugData.Location = New System.Drawing.Point(406, 39)
         Me.DebugData.Name = "DebugData"
         Me.DebugData.Size = New System.Drawing.Size(82, 17)
         Me.DebugData.TabIndex = 23
@@ -202,7 +210,7 @@ Partial Class Master
         '
         'SaveBMP
         '
-        Me.SaveBMP.Location = New System.Drawing.Point(546, 42)
+        Me.SaveBMP.Location = New System.Drawing.Point(199, 65)
         Me.SaveBMP.Name = "SaveBMP"
         Me.SaveBMP.Size = New System.Drawing.Size(75, 23)
         Me.SaveBMP.TabIndex = 26
@@ -211,7 +219,7 @@ Partial Class Master
         '
         'TrackBarSogliaMovimento
         '
-        Me.TrackBarSogliaMovimento.Location = New System.Drawing.Point(638, 42)
+        Me.TrackBarSogliaMovimento.Location = New System.Drawing.Point(490, 40)
         Me.TrackBarSogliaMovimento.Name = "TrackBarSogliaMovimento"
         Me.TrackBarSogliaMovimento.Size = New System.Drawing.Size(117, 45)
         Me.TrackBarSogliaMovimento.TabIndex = 27
@@ -220,7 +228,7 @@ Partial Class Master
         'SpeedThresholdLBL
         '
         Me.SpeedThresholdLBL.AutoSize = True
-        Me.SpeedThresholdLBL.Location = New System.Drawing.Point(674, 26)
+        Me.SpeedThresholdLBL.Location = New System.Drawing.Point(526, 24)
         Me.SpeedThresholdLBL.Name = "SpeedThresholdLBL"
         Me.SpeedThresholdLBL.Size = New System.Drawing.Size(36, 13)
         Me.SpeedThresholdLBL.TabIndex = 28
@@ -229,58 +237,127 @@ Partial Class Master
         'MMLBL
         '
         Me.MMLBL.AutoSize = True
-        Me.MMLBL.Location = New System.Drawing.Point(791, 26)
+        Me.MMLBL.Location = New System.Drawing.Point(651, 24)
         Me.MMLBL.Name = "MMLBL"
-        Me.MMLBL.Size = New System.Drawing.Size(46, 13)
+        Me.MMLBL.Size = New System.Drawing.Size(49, 13)
         Me.MMLBL.TabIndex = 31
-        Me.MMLBL.Text = "elementi"
+        Me.MMLBL.Text = "elements"
         '
         'TrackBarMM
         '
-        Me.TrackBarMM.Location = New System.Drawing.Point(761, 42)
+        Me.TrackBarMM.Location = New System.Drawing.Point(613, 40)
         Me.TrackBarMM.Name = "TrackBarMM"
         Me.TrackBarMM.Size = New System.Drawing.Size(117, 45)
+        Me.TrackBarMM.SmallChange = 2
         Me.TrackBarMM.TabIndex = 30
-        Me.TrackBarMM.TickFrequency = 10
+        Me.TrackBarMM.TickFrequency = 2
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(766, 10)
+        Me.Label5.Location = New System.Drawing.Point(610, 8)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(107, 13)
+        Me.Label5.Size = New System.Drawing.Size(120, 13)
         Me.Label5.TabIndex = 29
-        Me.Label5.Text = "Media Mobile Altezza"
+        Me.Label5.Text = "Height moving average "
         '
-        'RadioButton1
+        'ComboBoxStepH
         '
-        Me.RadioButton1.AutoSize = True
-        Me.RadioButton1.Location = New System.Drawing.Point(454, 48)
-        Me.RadioButton1.Name = "RadioButton1"
-        Me.RadioButton1.Size = New System.Drawing.Size(59, 17)
-        Me.RadioButton1.TabIndex = 32
-        Me.RadioButton1.TabStop = True
-        Me.RadioButton1.Text = "Altezza"
-        Me.RadioButton1.UseVisualStyleBackColor = True
+        Me.ComboBoxStepH.FormattingEnabled = True
+        Me.ComboBoxStepH.Location = New System.Drawing.Point(280, 38)
+        Me.ComboBoxStepH.Name = "ComboBoxStepH"
+        Me.ComboBoxStepH.Size = New System.Drawing.Size(52, 21)
+        Me.ComboBoxStepH.TabIndex = 34
+        Me.ComboBoxStepH.Text = "50"
         '
-        'RadioButton2
+        'ComboBoxStepS
         '
-        Me.RadioButton2.AutoSize = True
-        Me.RadioButton2.Location = New System.Drawing.Point(454, 70)
-        Me.RadioButton2.Name = "RadioButton2"
-        Me.RadioButton2.Size = New System.Drawing.Size(66, 17)
-        Me.RadioButton2.TabIndex = 33
-        Me.RadioButton2.TabStop = True
-        Me.RadioButton2.Text = "Distanza"
-        Me.RadioButton2.UseVisualStyleBackColor = True
+        Me.ComboBoxStepS.FormattingEnabled = True
+        Me.ComboBoxStepS.Location = New System.Drawing.Point(280, 68)
+        Me.ComboBoxStepS.Name = "ComboBoxStepS"
+        Me.ComboBoxStepS.Size = New System.Drawing.Size(52, 21)
+        Me.ComboBoxStepS.TabIndex = 35
+        Me.ComboBoxStepS.Text = "5"
+        '
+        'VMMLBL
+        '
+        Me.VMMLBL.AutoSize = True
+        Me.VMMLBL.Location = New System.Drawing.Point(766, 24)
+        Me.VMMLBL.Name = "VMMLBL"
+        Me.VMMLBL.Size = New System.Drawing.Size(49, 13)
+        Me.VMMLBL.TabIndex = 38
+        Me.VMMLBL.Text = "elements"
+        '
+        'TrackBarSP
+        '
+        Me.TrackBarSP.Location = New System.Drawing.Point(736, 42)
+        Me.TrackBarSP.Name = "TrackBarSP"
+        Me.TrackBarSP.Size = New System.Drawing.Size(117, 45)
+        Me.TrackBarSP.SmallChange = 2
+        Me.TrackBarSP.TabIndex = 37
+        Me.TrackBarSP.TickFrequency = 2
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(733, 8)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(120, 13)
+        Me.Label6.TabIndex = 36
+        Me.Label6.Text = "Speed moving average "
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(338, 72)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(55, 13)
+        Me.Label4.TabIndex = 40
+        Me.Label4.Text = "Speed gid"
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(338, 40)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(62, 13)
+        Me.Label7.TabIndex = 39
+        Me.Label7.Text = "Altitude grid"
+        '
+        'LinkLabelAstro
+        '
+        Me.LinkLabelAstro.AutoSize = True
+        Me.LinkLabelAstro.Location = New System.Drawing.Point(403, 59)
+        Me.LinkLabelAstro.Name = "LinkLabelAstro"
+        Me.LinkLabelAstro.Size = New System.Drawing.Size(31, 13)
+        Me.LinkLabelAstro.TabIndex = 41
+        Me.LinkLabelAstro.TabStop = True
+        Me.LinkLabelAstro.Text = "Astro"
+        '
+        'LinkLabelGis
+        '
+        Me.LinkLabelGis.AutoSize = True
+        Me.LinkLabelGis.Location = New System.Drawing.Point(403, 77)
+        Me.LinkLabelGis.Name = "LinkLabelGis"
+        Me.LinkLabelGis.Size = New System.Drawing.Size(25, 13)
+        Me.LinkLabelGis.TabIndex = 42
+        Me.LinkLabelGis.TabStop = True
+        Me.LinkLabelGis.Text = "GIS"
         '
         'Master
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(984, 647)
-        Me.Controls.Add(Me.RadioButton2)
-        Me.Controls.Add(Me.RadioButton1)
+        Me.Controls.Add(Me.LinkLabelGis)
+        Me.Controls.Add(Me.LinkLabelAstro)
+        Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.Label7)
+        Me.Controls.Add(Me.VMMLBL)
+        Me.Controls.Add(Me.TrackBarSP)
+        Me.Controls.Add(Me.Label6)
+        Me.Controls.Add(Me.ComboBoxStepS)
+        Me.Controls.Add(Me.ComboBoxStepH)
         Me.Controls.Add(Me.MMLBL)
         Me.Controls.Add(Me.TrackBarMM)
         Me.Controls.Add(Me.Label5)
@@ -308,6 +385,7 @@ Partial Class Master
         CType(Me.picGraph, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TrackBarSogliaMovimento, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.TrackBarMM, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.TrackBarSP, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -338,4 +416,13 @@ Partial Class Master
     Friend WithEvents Label5 As Label
     Friend WithEvents RadioButton1 As RadioButton
     Friend WithEvents RadioButton2 As RadioButton
+    Friend WithEvents ComboBoxStepH As ComboBox
+    Friend WithEvents ComboBoxStepS As ComboBox
+    Friend WithEvents VMMLBL As Label
+    Friend WithEvents TrackBarSP As TrackBar
+    Friend WithEvents Label6 As Label
+    Friend WithEvents Label4 As Label
+    Friend WithEvents Label7 As Label
+    Friend WithEvents LinkLabelAstro As LinkLabel
+    Friend WithEvents LinkLabelGis As LinkLabel
 End Class
