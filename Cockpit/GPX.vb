@@ -8,28 +8,18 @@
     Public Const SPD = 6
 
     Function ReadGPX(FileName As String) As String(,)
-        'https://www.experts-exchange.com/questions/23404291/Problems-parsing-GPX-XML-file.html
-        'Instantiate an XmlDocument object. 
         Dim xmldoc As New System.Xml.XmlDocument()
         Dim GPSInfoNode As System.Xml.XmlNode
 
         xmldoc.Load(FileName)
 
-
-        'Instantiate an XmlNamespaceManager object. 
         Dim xmlnsManager As New System.Xml.XmlNamespaceManager(xmldoc.NameTable)
 
-        'Add the namespaces used in books.xml to the XmlNamespaceManager. 
         xmlnsManager.AddNamespace("nsgpx", "http://www.topografix.com/GPX/1/1")
         xmlnsManager.AddNamespace("nsxsi", "http://www.w3.org/2001/XMLSchema-instance")
         xmlnsManager.AddNamespace("nsmbx", "http://www.motionbased.net/mbx")
 
         Dim GPSInfo As System.Xml.XmlNodeList
-
-        'Execute the XPath query using the SelectNodes method of the XmlDocument. 
-        'Supply the XmlNamespaceManager as the nsmgr parameter. 
-        'The matching nodes will be returned as an XmlNodeList. 
-        'Use an XmlNode object to iterate through the returned XmlNodeList. 
 
         GPSInfo = xmldoc.SelectNodes("//nsgpx:gpx/nsgpx:trk/nsgpx:trkseg/nsgpx:trkpt", xmlnsManager)
 
@@ -63,7 +53,6 @@
     End Structure
 
     Sub GetCourseAndDistance(ByVal pt1 As wptType, ByVal pt2 As wptType, ByRef course As Double, ByRef dist As Double)
-        'http://www.tma.dk/gps/
         ' convert latitude and longitude to radians
         Dim lat1 As Double = DegreesToRadians(CDbl(pt1.lat))
         Dim lon1 As Double = DegreesToRadians(CDbl(pt1.lon))
