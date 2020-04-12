@@ -22,6 +22,7 @@ Partial Class Master
     'Non modificarla mediante l'editor del codice.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Master))
         Me.picGraph = New System.Windows.Forms.PictureBox()
         Me.DateTimePicker1 = New System.Windows.Forms.DateTimePicker()
         Me.LatG = New System.Windows.Forms.TextBox()
@@ -380,6 +381,7 @@ Partial Class Master
         Me.Controls.Add(Me.LatG)
         Me.Controls.Add(Me.DateTimePicker1)
         Me.Controls.Add(Me.picGraph)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "Master"
         Me.Text = "Epic Day Cockpit"
         CType(Me.picGraph, System.ComponentModel.ISupportInitialize).EndInit()
