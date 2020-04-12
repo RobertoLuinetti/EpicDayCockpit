@@ -7,6 +7,11 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "CockpitNew", "Cockpit\Cockp
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Epic Day Cockpit", "Epic Day Cockpit\Epic Day Cockpit.vdproj", "{DEE19C3A-A6D5-483A-BD70-1625AF858861}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{212F1CF2-07E8-41D7-9521-2AF63A55C59F}"
+	ProjectSection(SolutionItems) = preProject
+		Epic Day Cockpit.msi = Epic Day Cockpit.msi
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
